@@ -1,0 +1,53 @@
+﻿@using Data
+@page "/todo"
+
+
+<div class="container-fluid">
+    <h3 class="text-center">Todo</h3>
+
+    <div class="row">
+        <div class="col-sm-12 col-md-6 mb-2">
+            <div class="card">
+                <div class="card-body">
+                    <form class="col-sm-12">
+                        <input placeholder="Something todo" class="form-control mb-2" @bind="newTodoItem" />
+                        <input type="button" class="btn btn-primary form-control" value="Add Todo" @onclick="AddTodo" />
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-12 col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <ul class="list-group">
+                        @foreach (var item in todoItemList)
+                        {
+                            <li class="list-group-item">@item.Title</li>
+                        }
+                    </ul>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+
+
+@code 
+{
+  private List<TodoItem> todoItemList = new List<TodoItem>();
+  private string newTodoItem;
+
+  private void AddTodo()
+  {
+      if (!string.IsNullOrEmpty(newTodoItem))
+      {
+          todoItemList.Add(new TodoItem { Title = newTodoItem });
+          newTodoItem = string.Empty;
+      }
+
+  }
+}
