@@ -1,0 +1,34 @@
+﻿@page "/todov2"
+@using Data
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-12">
+            <button type="button" class="btn btn-primary" @onclick="() => OpenDeleteDialog()">Add Todo Item</button>
+        </div>
+    </div>
+</div>
+
+@if (DeleteDialogOpen)
+{
+    <TodoV2AddModal OnClose="@OnDeleteDialogClose"></TodoV2AddModal>
+}
+
+
+@code {
+
+    private List<TodoItem> todoItemList = new List<TodoItem>();
+    private List<TodoItem> completedItemList = new List<TodoItem>();
+    public bool DeleteDialogOpen { get; set; }
+
+    private void OnDeleteDialogClose(bool accepted){
+        DeleteDialogOpen = false;
+        StateHasChanged();
+    }
+
+    private void OpenDeleteDialog()
+    {
+        DeleteDialogOpen = true;
+        StateHasChanged();
+    }
+}
