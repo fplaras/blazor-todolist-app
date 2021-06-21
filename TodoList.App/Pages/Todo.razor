@@ -22,14 +22,40 @@
                     <ul class="list-group">
                         @foreach (var item in todoItemList)
                         {
-                            <li class="list-group-item">@item.Title</li>
+                            <li class="list-group-item">
+                                <div class="row">
+                                    <div class="form-row">
+                                        <div class="col-sm-6">
+                                            @*<input type="checkbox" class="form-control form-check" 
+                                                   @onchange="@(e => item.IsDone = (bool)e.Value)"/>*@
+                                            <input type="checkbox" class="form-control form-check" 
+                                                   @onchange="@(e => UpdateTodo(e, item))"/>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <input class="form-control" @bind="item.Title" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
                         }
                     </ul>
                 </div>
-
             </div>
         </div>
-
+    </div>
+    <div class="row mt-2">
+        <div class="col-sm-12">
+            <h4 class="text-center">Done Items</h4>
+            <div class="card">
+                <div class="card-body">
+                    <div class="card-title">Completed Items</div>
+                    @foreach (var completedItem in completedItemList) 
+                    { 
+                        <p>@completedItem.Title</p>
+                    }
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -38,16 +64,43 @@
 
 @code 
 {
-  private List<TodoItem> todoItemList = new List<TodoItem>();
-  private string newTodoItem;
+   private List<TodoItem> todoItemList = new List<TodoItem>();
+   private string newTodoItem;
+   private List<TodoItem> completedItemList = new List<TodoItem>();
 
-  private void AddTodo()
-  {
-      if (!string.IsNullOrEmpty(newTodoItem))
-      {
-          todoItemList.Add(new TodoItem { Title = newTodoItem });
-          newTodoItem = string.Empty;
-      }
+   private void AddTodo()
+   {
+       if (!string.IsNullOrEmpty(newTodoItem))
+       {
+           todoItemList.Add(new TodoItem { Title = newTodoItem });
+           newTodoItem = string.Empty;
+       }
+   }
 
-  }
+   private bool ChangeIsDoneValue(bool isDone)
+   {
+       return isDone == false ? true : false;
+   }
+
+   private void UpdateTodo(ChangeEventArgs e, TodoItem item)
+   {
+       item.IsDone = (bool)e.Value;
+       if (item.IsDone)
+       {
+           completedItemList.Add(item);
+           todoItemList.Remove(item);
+       }
+       else
+       {
+           if (completedItemList.Count > 0)
+           {
+               TodoItem updatedItem = completedItemList.FirstOrDefault(x => x.Title == item.Title);
+               if (updatedItem != null)
+               {
+                   completedItemList.Remove(updatedItem);
+                   todoItemList.Add(updatedItem);
+               }
+           }
+       }
+   }
 }
